@@ -1,0 +1,153 @@
+<!DOCTYPE html>
+<html lang="tr">
+<head>
+<meta charset="UTF-8">
+<title>Her Gün Sen 🤍</title>
+<style>
+body{
+  margin:0;
+  font-family: Arial, sans-serif;
+  background:#fff;
+}
+h1{
+  text-align:center;
+  margin:20px 0;
+}
+.calendar{
+  display:grid;
+  grid-template-columns: repeat(auto-fill,minmax(60px,1fr));
+  gap:10px;
+  padding:20px;
+}
+.day{
+  position:relative;
+  height:60px;
+  border-radius:14px;
+  background:#f3f3f3;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  cursor:pointer;
+  font-weight:bold;
+  transition:.2s;
+}
+.day.locked{
+  opacity:.4;
+  cursor:not-allowed;
+}
+.day.opened{
+  background:#ffe6eb;
+}
+.day.opened::after{
+  content:"❤";
+  position:absolute;
+  bottom:4px;
+  right:6px;
+  font-size:14px;
+  color:#ff4d6d;
+}
+.modal{
+  position:fixed;
+  inset:0;
+  background:rgba(0,0,0,.4);
+  display:none;
+  align-items:center;
+  justify-content:center;
+}
+.modal.active{
+  display:flex;
+}
+.box{
+  background:#fff;
+  max-width:520px;
+  width:90%;
+  border-radius:18px;
+  padding:24px;
+  text-align:center;
+}
+.heart{
+  width:90px;
+  margin:0 auto 16px;
+}
+.close{
+  margin-top:18px;
+  padding:10px 18px;
+  border:none;
+  border-radius:10px;
+  background:#ff4d6d;
+  color:#fff;
+  cursor:pointer;
+}
+</style>
+</head>
+<body>
+
+<h1>Her Gün Sen 🤍</h1>
+
+<div class="calendar" id="calendar"></div>
+
+<div class="modal" id="modal">
+  <div class="box">
+    <svg class="heart" viewBox="0 0 32 29">
+      <path fill="#ff4d6d" d="M23.6,0c-3.1,0-5.6,2.4-7.6,4.9C14,2.4,11.5,0,8.4,0
+      C3.8,0,0,3.8,0,8.4c0,9.2,16,20.6,16,20.6s16-11.4,16-20.6C32,3.8,28.2,0,23.6,0z"/>
+    </svg>
+    <div id="text"></div>
+    <button class="close" onclick="closeModal()">Kapat</button>
+  </div>
+</div>
+
+<script>
+// 🔴 BURAYA 365 METNİ AYNEN YAPIŞTIR
+const texts = ["Gözlerine her baktığımda, orada kendi evimi buluyorum.","Seninle her şey daha anlamlı, seninle her an daha değerli.","Gülüşün, en zor günümde bile içimi ısıtan bir güneş gibi.","\"Ben sana mecburum bilemezsin...\" - Attila İlhan","Varlığın, hayatımın en güzel \"iyi ki\"si.","Sen benim gökyüzümdeki en parlak yıldızsın.","Kalbime yaşattığın o huzuru başka hiçbir yerde bulamadım.","Dünyada milyarlarca insan var ama kalbim sadece senin yanında ritmini buluyor.","\"Seni sevdim, seni birdenbire değil usul usul sevdim.\" - Gülten Akın","Sesin, duyduğum en huzurlu melodi.","Seninle geçen her dakika, ömrüme eklenen bir güzellik.","\"İki kalp arasında en kısa yol: Birbirine uzanmış merdivenler.\" - Cemal Süreya","Gülüşündeki o saklı bahçede yaşlanmak istiyorum.","Sen benim hem sığınağım hem de en büyük maceramsın.","Seninle çay içmek bile bir dünya seyahati gibi.","\"Gökyüzü gibi bir şey bu aşk, hiçbir yere gitmiyor.\" - Edip Cansever","Dünyanın en güzel manzarası, senin mutlu olduğunu gördüğüm andır.","Sen benim hayatıma renk katan en güzel fırça darbesisin.","Elini tuttuğumda tüm dünya sessize alınıyor sanki.","Kalbinin güzelliği yüzüne yansımış, her gün daha çok hayran kalıyorum.","\"Seni saklayacağım inan, yazdıklarımda, çizdiklerimde.\" - Özdemir Asaf","Ruhu dinlendiren bir rüzgar gibisin, hep ferahlık veriyorsun.","Sen benim bugünüm, yarınım ve tüm gelecek hayallerimsin.","Gözlerin, keşfedilmeyi bekleyen en derin okyanus.","Seninle susmak bile, başkasıyla konuşmaktan daha huzurlu.","Seninle olmanın en güzel yanı, kendim olabilmem.","Saçlarının kokusu, evim dediğim yerin ta kendisi.","Kalbimdeki her ritim senin ismini fısıldıyor.","\"Aşk, iki bedende yaşayan tek bir ruhtur.\" - Aristo","Sen benim başıma gelen en mucizevi şeysin.","Hayatın tüm karmaşasında, senin kolların en güvenli liman.","Bir gülüşünle kış ortasında baharı getiriyorsun gönlüme.","Seni sevmek, nefes almak kadar doğal ve vazgeçilmez.","\"Ömrümün en güzel mevsimi sensin.\"","Seninle her yolculuk, cennete giden bir yol gibi.","Yıldızlar bile senin gözlerindeki ışıltı kadar parlak değil.","Ruhun ruhuma değdiğinden beri her şey daha renkli.","Sen benim en güzel duamın kabul olmuş halisin.","\"Bir bozuk saattir yüreğim, hep sende durur.\" - Turgut Uyar","Sesindeki huzur, tüm dertlerimi unutturmaya yetiyor.","Sen varken hayat daha kolay, daha neşeli, daha yaşanılası.","Kalbimde sana ayırdığım yer, dünyanın en geniş ülkesi.","Seninle her anı ölümsüzleştirmek istiyorum.","Seninle her yere gelirim, yolun sonu uçurum olsa bile.","Bir bakışınla tüm yorgunluğumu alıp götürüyorsun.","Seninle büyümek, seninle değişmek dünyanın en güzel şeyi.","\"Aşk da tıpkı elif gibidir, isminde gizlidir ama okunmaz.\"","Varlığın, hayatımın en karanlık gecelerini aydınlatıyor.","Sen benim eksik kalan tüm parçalarımı tamamlayan parçasın.","Seni tanıdığım gün, hayatımın yeniden başladığı gündür.","Seninle her sabah yeni bir hayata uyanıyor gibi hissediyorum.","Zihnindeki düşünceleri merak etmek bile seni sevme sebebim.","Gözlerinde geleceğimizi görebiliyorum.","Seninle paylaşılan sessizlik bile anlam yüklü.","Ellerin ellerime değdiğinde tüm korkularım yok oluyor.","Sen benim hayat hikayemin başrolü ve en güzel kahramanısın.","Her gün seni bir önceki günden daha çok seviyorum.","Sen benim hem huzurum hem de heyecanımsın.","Gökkuşağının tüm renkleri senin gülüşünde gizli.","\"Sevmek bir eylemdir.\" Ve ben bu eylemi her saniye senin için yapıyorum.","Yanında kendimi dünyanın en güçlü insanı gibi hissediyorum.","Senin nazikliğin bu dünyadaki en nadir şey.","Sen benim hayatımdaki en büyük şanssın.","Seninle geçen sıradan bir gün bile benim için bir hazine.","Kahveni yudumlarken yüzünde oluşan o ifadeyi seviyorum.","İsmin, dilimin en çok sevdiği kelime.","Kalbimde sadece senin geçebileceğin kapılar var.","Sen benim hayatımın şiirisin.","Bir ömür boyu elini bırakmamaya söz veriyorum.","Dünyayı senin gözlerinden görmek istiyorum.","Sesindeki şefkat, yaralarımı iyileştiren bir merhem gibi.","Seninle her yeni gün, keşfedilmeyi bekleyen bir macera.","Sen benim en güzel rüyamın gerçeğe dönüşmüş halisin.","Kalbimdeki aşkın hiç bitmeyecek bir enerji kaynağı.","Sen benim en yakın dostum ve en büyük aşkımsın.","Gülüşünle karanlıkları aydınlatan bir meşale gibisin.","Seninle yaşlanmak, hayatın bana sunabileceği en büyük lütuf.","Sen benim ruhumun aynasısın.","Her bakışında beni yeniden kendine aşık ediyorsun.","Seninle imkansız görünen her şey mümkün hale geliyor.","Sen benim dinginliğim ve fırtınamsın.","Senin sevgin, hayat yolculuğumdaki en değerli pusula.","Kalbinin temizliği, yüzüne yansıyan bir ışık gibi.","Sen benim en kıymetli hazinemsin.","Seninle her an, paha biçilemez bir anı.","Hayatımdaki en büyük \"iyi ki\" sensin.","Bir ömür seninle geçse de asla doyamam.","Sen benim nefes alma sebebimsin.","Senin sevginle her zorluğun üstesinden gelebilirim.","Sen benim hayatımdaki en güzel mucizesin.","Seni kelimelerle anlatamayacak kadar çok seviyorum.","\"Seni olduğun gibi seviyorum.\"","Bakışlarındaki o derin anlamda kaybolmak, bulduğum en güzel yol.","Sen sadece sevgilim değil, ruhumun en iyi anlaştığı arkadaşısın.","Senin dürüstlüğün, bu hayatta tutunduğum en sağlam dal.","Bir şeyi tutkuyla anlatırken gözlerinde yanan o ışığı seviyorum.","En yorgun anımda bile senin bir mesajın tüm enerjimi yerine getiriyor.","Sen benim hayatıma zarafet katan en güzel detaysın.","Seninle kışın ortasında sıcak bir çay içmenin hayali bile içimi ısıtıyor.","Yaşlandığımızda el ele bir bankta oturup \"iyi ki\" demek istiyorum.","Seninle dünyanın her yerini gezmek, her şehirde bir anı bırakmak istiyorum.","En kötü günümüzde bile birbirimize sığınacağımızı bilmek en büyük lüksüm.","Seninle her sabah aynı kahvaltı masasına oturmak en büyük hayalim.","Hayatın tüm yükünü seninle paylaşmak, yükü yarı yarıya azaltmak demek.","Bir ömür boyu seninle aynı gökyüzüne bakmak istiyorum.","Seninle her mevsimi, her yağmuru, her güneşi ayrı sevmek istiyorum.","Bugün de aklımdaki tek düşünce sensin.","Sadece sesini duymak bile günümü kurtarmaya yetiyor.","Kalbim her atışında senin adını sayıklıyor.","Dünyanın en şanslı insanı olduğumu bana hissettirdiğin için teşekkürler.","Gözlerini kapatınca yanında olduğumu hisset.","Sen benim vazgeçilmezimsin.","Olaylara bakış açındaki o özgünlük, dünyayı daha anlamlı kılıyor.","Kararlılığın ve azmin, bana her zaman ilham veriyor.","Senin yanındayken dünya dışarıda kalıyor, sadece biz oluyoruz.","Küçücük bir şeye çocuk gibi sevinmen, içimdeki dünyayı canlandırıyor.","Seninle konuşmak, ruhumu dinlendiren bir terapi seansı gibi.","Nezaketin, bu kaba dünyadaki en güzel başkaldırı.","Sen, benim eksik cümlelerimi tamamlayan o gizli öznesin.","Gözlerin, her sabah uyanmak için en güzel bahanem.","Sen varken hayat daha az korkutucu ve çok daha renkli.","Kalbinin temizliği, her davranışında kendini belli ediyor.","Bir kitabı okurkenki odaklanman bile beni sana hayran bırakıyor.","Hayatımdaki tüm yolların sana çıkması ne güzel bir tesadüf.","En zor kararlarımda bile senin desteğin bana güç veriyor.","Seninle her gün yeni bir macera başlıyor kalbimde.","Gülüşünün tınısı, en sevdiğim radyo kanalı gibi.","Seninleyken zamanın durmasını değil, sonsuza dek böyle kalmasını istiyorum.","Sen benim en zorlu sınavımın en tatlı ödülüsün.","Varlığın, ruhumun üzerine örtülmüş yumuşacık bir battaniye.","Hayatın tüm gürültüsü senin yanındayken susuyor.","Seninle paylaştığım her kahkaha, ruhuma şifa.","Bakışlarındaki o güven duygusu, beni her şeye karşı koruyor.","Sen benim en güzel alışkanlığımsın.","Seninle her şey o kadar doğal ve o kadar doğru ki...","Dünyayı seninle keşfetmek, hayatın en büyük anlamı.","Seni sevmek, her gün yeniden doğmak gibi.","Seninle geçen her fırtına, bizi birbirimize daha çok bağlıyor.","Kalbinin ritmi, benim yaşam enerjim.","Sen benim hem evim hem de özgürlüğümsün.","Gözlerindeki o ışıltıyı hiç kaybetme, o benim yolum.","Seninle her şey çok daha kolay ve çok daha güzel.","Sen benim ömrümün en güzel şiirisin.","Bir ömür seninle aynı rüyayı görmek istiyorum.","Sen varken hayat çok daha neşeli ve umut dolu.","Senin sevgin, benim en büyük gücüm.","Hayatımdaki en değerli varlık sensin.","Seninle her anım, bir ömre bedel.","Seni sevmekten asla vazgeçmeyeceğim.","İyi ki varsın, iyi ki hayatımdasın.","Seninleyken kendimi çok daha iyi bir insan gibi hissediyorum.","Gülüşün, kalbimdeki tüm kilitleri açan tek anahtar.","Seninle her yolculuk, mutluluğa giden bir rota.","Sen benim hayatımdaki en parlak renk tonusun.","Senin sevginle her sabah daha enerjik uyanıyorum.","Kalbimdeki en özel köşe her zaman senin.","Seninle konuşurken zamanın nasıl geçtiğini unutuyorum.","Sen benim her halimle sevdiğim tek insansın.","Seninleyken dünya çok daha katlanılabilir bir yer.","Seni sevmek, ruhumun en derin ihtiyacı.","Seninle her başarı daha tatlı, her yenilgi daha katlanılabilir.","Sen benim hayatımdaki en güzel mucizesin.","Gözlerin, ruhumun en sevdiği kütüphane.","Seninle yaşlanmak, en büyük hayalim.","Senin sevgin, benim en büyük servetim.","Hayatımdaki en güzel şarkı senin sesinle başlıyor.","Seninleyken kendimi güvende ve huzurlu hissediyorum.","Seni sevmek, hayatın bana sunduğu en büyük ödül.","Sen benim en yakın sırdaşım ve en büyük desteğimsin.","Seninle her gün, yeni bir mutluluk sebebi.","Kalbimdeki aşkın hiç sönmeyecek bir ateş.","Sen benim hayatıma anlam katan en güzel detaysın.","Seninle her anı ölümsüzleştirmek istiyorum.","Senin sevginle her şey çok daha anlamlı.","İyi ki seni tanımışım, iyi ki benimlesin.","Sen benim dünyadaki cennetimsin.","Seninle her şey çok daha güzel ve çok daha özel.","Seni sevmek, hayatımın en doğru kararı.","Seninleyken hayat bir masal gibi.","Sen benim kalbimin tek sahibisin.","Senin sevgin, ruhumu besleyen en büyük kaynak.","Hayatımdaki her şey seninle daha güzel.","Seninle her gün, yeni bir umut.","Seni sevmek, dünyanın en güzel duygusu.","Sen benim hayatımdaki en değerli hazinesin.","Seninle her an, paha biçilemez.","İyi ki varsın sevgilim.","Senin sevginle her gün daha mutluyum.","Sen benim hayatımdaki en güzel şeysin.","Seni her şeyden çok seviyorum.","Seninle her sabah yeni bir heyecanla uyanıyorum.","Kalbim sadece senin için atıyor.","Sen benim her şeyimsin.","Senin sevgin, benim en büyük dayanağım.","Hayatımdaki en güzel anlar seninle olanlar.","Seninle her şey çok daha anlamlı ve özel.","Seni sevmekten asla yorulmayacağım.","Sen benim hayatımdaki en büyük \"iyi ki\"msin.","Seninle her gün, yeni bir hediye.","Seni sonsuza dek seveceğim.","Sesinin tonu, zihnimdeki tüm fırtınaları dindiren tek ilaç.","Seninle en basit yemek bile kral sofrası gibi lezzetli.","Yanında kendimi hiç olmadığım kadar cesur hissediyorum.","Seninle el ele yürürken tüm dünya bizimmiş gibi geliyor.","Gülüşündeki o içtenlik, hayatın tüm zorluklarını unutturuyor.","Sen benim karanlık gecelerimdeki tek kutup yıldızımsın.","Seninle paylaşılan her sessizlik, binlerce şiire bedel.","Kalbindeki o sonsuz merhamet, beni sana her gün daha çok bağlıyor.","Seninle geçen her saniye, kalbimdeki en kıymetli hazine.","Sen benim hayatımdaki en güzel mucize ve en büyük lütufsun.","Gözlerindeki o derin huzur, ruhumun sığındığı tek liman.","Senin sevgin, hayat yolculuğumdaki en güvenilir pusula.","Seninle yaşlanmak, hayatın bana verebileceği en büyük ödül.","Her gün seninle yeniden tanışıyormuşum gibi bir heyecan var içimde.","Sen benim eksik yanlarımı tamamlayan, ruhumun diğer yarısısın.","Seninle her zorluk, aşılması gereken küçük bir engel sadece.","Hayatın tüm karmaşasında, senin kolların en güvenli sığınağım.","Senin dürüstlüğün ve karakterin, sana olan saygımı her gün artırıyor.","Sen varken dünya çok daha renkli ve yaşanılası bir yer.","Seninle kurduğumuz her hayal, gerçeğe dönüşmeyi bekleyen bir mucize.","Kalbimdeki aşkın, ruhumu besleyen en saf ve en güçlü enerji.","Seninle her anı ölümsüzleştirmek, en büyük tutkum.","Sen benim hayat hikayemin en sevdiğim ve en güzel sayfasısın.","Senin sevginle her sabah güne gülümseyerek başlıyorum.","İyi ki hayatımdasın, iyi ki seninle bu yolu yürüyorum.","Seninle her mevsim bahar, her gün bir bayram gibi.","Gözlerindeki o eşsiz ışık, yolumu aydınlatan tek rehberim.","Sen benim en yakın dostum, en büyük aşkım ve her şeyimsin.","Seninle paylaşılan her lokma, dünyanın en büyük ziyafeti.","Seni sevmek, hayatın bana sunduğu en büyük ayrıcalık.","Seninleyken kendimi dünyanın en şanslı insanı hissediyorum.","Kalbimdeki her ritim, senin ismini sonsuz bir aşkla fısıldıyor.","Seninle geçen her gün, hayatıma eklenen paha biçilemez bir değer.","Sen benim hayatımdaki en güzel \"iyi ki\" ve en büyük mutluluksun.","Senin sevginle her engeli aşabilir, her zorluğa göğüs gerebilirim.","Sen benim ruhumun aynası, kalbimin en derin köşesinin sahibisin.","Seninle her bakışma, yeniden aşık olmam için yeterli bir sebep.","Hayatın tüm gürültüsü içinde, senin sesin en huzurlu melodi.","Seninleyken zamanın nasıl geçtiğini değil, hayatın güzelliğini anlıyorum.","Sen benim sonsuza kadar sürecek olan en güzel masalımsın.","Seninle her gün yeni bir macera, yeni bir mutluluk keşfi.","Kalbimdeki sevgin, her geçen gün daha da derinleşen bir okyanus.","Seninle her şey çok daha kolay, çok daha neşeli ve anlamlı.","Sen benim hayallerimin ötesindeki o eşsiz ve özel insansın.","Senin sevginle kendimi çok daha güçlü ve huzurlu hissediyorum.","İyi ki varsın sevgilim, seninle her şey çok daha güzel.","Seninle el ele, gönül gönüle bir ömür geçirmek tek dileğim.","Sen benim hayatıma anlam katan, dünyamı güzelleştiren tek şeysin.","Seninle her an, kalbimde açan rengarenk bir çiçek gibi.","Seni seviyorum, çünkü sen benim hayatımın en güzel gerçeğisin.","Gülüşünün sıcaklığı, en soğuk kış günlerini bile bahara çeviriyor.","Seninle bir fincan kahve içmek, hayatın tüm dertlerini unutturuyor.","Zihnindeki o pırıltılı fikirler, beni sana her gün yeniden hayran bırakıyor.","Seninle her sessizlik, ruhlarımızın birbirine fısıldadığı bir aşk şiiri.","Kalbindeki o çocuksu neşe, benim en büyük mutluluk kaynağım.","Sen benim hayatımdaki tüm karmaşayı düzene sokan o sihirli dokunuşsun.","Seninleyken kendimi hiç olmadığım kadar özgür ve mutlu hissediyorum.","Gözlerindeki o derin şefkat, tüm yaralarımı iyileştiren bir merhem.","Sen benim her sabah uyanmak için bulduğum en güzel bahanesin.","Senin sevgin, hayatın bana verdiği en kıymetli ve en özel hediye.","Seninle her tartışma bile, birbirimizi daha iyi tanımamız için bir fırsat.","Sen benim hayatımdaki en sağlam dayanak ve en güvenilir limansın.","Seninleyken dünya dışarıda kalıyor, sadece biz ve aşkımız oluyoruz.","Kalbimdeki yerin o kadar derin ki, oraya sadece sen sığabilirsin.","Seninle geçen her dakika, ömrüme ömür katan bir mucize.","Sen benim hayatımdaki en güzel şiir, en dokunaklı şarkısın.","Senin sevginle her gün daha da büyüyor ve güzelleşiyorum.","İyi ki benimlesin, iyi ki bu hayatı seninle paylaşıyorum.","Seninle her mevsimin, her günün kendine has bir büyüsü var.","Sen benim sonsuza kadar seveceğim, asla vazgeçmeyeceğim tek aşkımsın.","Seninle her bakışma, içimde binlerce havai fişeğin patlaması gibi.","Kalbinin güzelliği, tüm dünyayı daha yaşanılır bir yer kılıyor.","Seninle el ele yürümek, hayatın bana sunduğu en büyük onur.","Sen benim her halimi bilen ve beni yine de çok seven tek insansın.","Senin sevgin, ruhumun en derin ihtiyaçlarını karşılayan tek kaynak.","Seninle her anı ölümsüzleştirmek, hayatımın en anlamlı amacı.","Sen benim hayat hikayemin en parlak ve en sevgi dolu kahramanısın.","Seninle her yeni güne başlamak, bir mucizeye tanıklık etmek gibi.","Kalbimdeki aşkın, beni hayata bağlayan en güçlü ve en kutsal bağ.","Seni seviyorum, çünkü seninle her şey çok daha mümkün ve güzel.","Seninle her akşam günü senin kollarında bitirmek en büyük huzur.","Sen benim en yakın arkadaşım, en dürüst sırdaşım ve tek aşkımsın.","Senin sevginle hayatın tüm yükü omuzlarımdan kalkıyor sanki.","İyi ki varsın sevgilim, seninle her şey çok daha özel ve anlamlı.","Seninle her yolculuk, mutluluğun zirvesine giden bir yol gibi.","Sen benim hayatımdaki en büyük şans, en tatlı tesadüfsün.","Seninle her gülüşme, ömrüme binlerce yeni yıl ekliyor.","Kalbimdeki sevgin, hiç bitmeyecek ve hep artacak olan tek hazinem.","Seninle her şey o kadar doğru ki, başka hiçbir şeye ihtiyaç duymuyorum.","Seni sonsuza dek, tüm kalbimle ve ruhumla sevmeye devam edeceğim.","Seninle her sabah kahvaltıda göz göze gelmek, günün en güzel anı.","Sen benim hayatımdaki tüm 'keşke'leri 'iyi ki'ye çeviren sihirbazsın.","Seninleyken kendimi çok daha değerli ve özel hissediyorum.","Kalbindeki o bitmek bilmeyen enerji, bana her zaman güç veriyor.","Seninle paylaştığımız her anı, kalbimde altın harflerle saklıyorum.","Sen benim hayatımdaki en huzurlu liman ve en güvenli sığınaksın.","Senin sevginle her şey çok daha renkli, çok daha canlı ve güzel.","İyi ki benim sevgilimsin, iyi ki bu hayatı seninle paylaşıyorum.","Seninle her gün, yeni bir sevgi ve mutluluk keşfi benim için.","Seni seviyorum, çünkü sen benim ruhumun en derin ve en özel parçasısın.","Seninle her adımda, geleceğe olan inancım daha da güçleniyor.","Kalbimdeki yerin, dünyanın en huzurlu ve en sevgi dolu köşesi.","Seninle her konuşma, zihnimi ve ruhumu aydınlatan bir ışık.","Sen benim hayatımdaki en büyük destekçi ve en sadık yol arkadaşımsın.","Senin sevginle her zorluğun üstesinden gelebileceğimi biliyorum.","İyi ki varsın, seninle her şey çok daha yaşanılası ve güzel.","Seninle her bakışma, kalbimde binlerce kelebeğin uçuşması demek.","Sen benim hayatımdaki en kıymetli mucize ve en büyük mutluluksun.","Seninle her anı ölümsüzleştirmek, en büyük hayalim ve tutkum.","Seni sonsuza kadar, aynı heyecan ve aşkla sevmeye devam edeceğim.","Seninle her kış günü, kalbimdeki sevginle sıcacık geçiyor.","Sen benim hayatıma zarafet ve anlam katan en özel insansın.","Seninle her gülümseme, ruhumdaki tüm yaraları iyileştiriyor.","Kalbimdeki aşkın, beni ben yapan en değerli ve en kutsal duygu.","Seninle her yol, mutluluğa ve huzura çıkan bir kapı sanki.","Sen benim hayatımdaki en büyük \"iyi ki\" ve en tatlı şansımsın.","Senin sevginle her şey çok daha parlak ve çok daha umut verici.","İyi ki benimlesin sevgilim, seninle her şey çok daha güzel.","Seninle her gün, yeniden doğmuş gibi taze ve heyecanlıyım.","Seni seviyorum, çünkü sen benim hayatımın tek ve en büyük aşkısın.","Seninle her an, paha biçilemez bir mücevher gibi kalbimde.","Sen benim her halimle kabul edildiğim ve sevildiğim tek yersin.","Seninle her paylaşım, ruhlarımızı birbirine daha çok bağlıyor.","Kalbimdeki sevgin, hiç bitmeyecek olan en büyük enerji kaynağım.","Seninle her başarı, birlikte kutladığımız en büyük zafer.","Sen benim hayatımdaki en huzurlu köşe ve en güvenli sığınaksın.","Senin sevginle her şey çok daha anlamlı ve çok daha özel.","İyi ki varsın, seninle bir ömür geçirmek en büyük hayalim.","Seninle her bakışma, aşkımızın ne kadar derin olduğunu hatırlatıyor.","Seni sonsuza dek, tüm kalbimle ve ruhumla sevmeye yeminliyim.","Seninle her yağmurlu gün, romantik bir şiirin dizeleri gibi huzurlu.","Sen benim hayatımdaki en parlak yıldız ve en güvenilir rehberimsin.","Seninle her kahkaha, hayatın tüm yükünü bir anlığına yok ediyor.","Kalbimdeki yerin, sadece seninle dolabilecek kadar özel ve büyük.","Senin sevginle her sabah, yeni bir mucizeye uyanıyormuşum gibi.","İyi ki benim sevgilimsin, seninle her şey çok daha yaşanılası.","Seninle her anı ölümsüzleştirmek, kalbimdeki en büyük hazinem.","Sen benim hayatıma renk, heyecan ve huzur katan tek şeysin.","Seninle her gün, yeni bir mutluluk hikayesi yazıyoruz birlikte.","Seni seviyorum, çünkü sen benim ruhumun en derinlerinde saklısın.","Seninle her adımda, birbirimize olan bağımız daha da güçleniyor.","Kalbimdeki aşkın, beni her gün daha iyi bir insan olmaya itiyor.","Seninle her konuşma, kalbimdeki tüm çiçeklerin aynı anda açması.","Sen benim hayatımdaki en büyük şans ve en tatlı mucizesin.","Senin sevginle her zorluk, birlikte aşacağımız küçük bir detay.","İyi ki varsın sevgilim, seninle her şey çok daha anlamlı.","Seninle her bakışma, ruhumun derinliklerine inen bir sevgi yolu.","Sen benim hayat hikayemin en sevgi dolu ve en mutlu sayfasısın.","Seninle her anı paylaşmak, hayatın bana sunduğu en büyük lütuf.","Seni sonsuza kadar, aynı tutku ve sadakatle sevmeye devam edeceğim.","Seninle her yeni yıl, aşkımızın daha da büyüyeceği yeni bir başlangıç.","Kalbimdeki yerin, her geçen gün daha da büyüyen bir sevgi ormanı.","Seninle her gülümseme, geleceğe dair olan umutlarımı artırıyor.","Sen benim hayatımdaki en değerli varlık ve en büyük mutluluğumsun.","Senin sevginle her şey çok daha kolay ve çok daha huzurlu.","İyi ki benimlesin, seninle bir ömür el ele yürümek istiyorum.","Seninle her anı ölümsüzleştirmek, en büyük yaşam sevincim.","Sen benim hayatıma anlam katan, dünyayı güzelleştiren tek şeysin.","Seninle her gün, yeni bir sevgi mucizesine uyanmak gibi.","Seni seviyorum, çünkü sen benim kalbimin tek ve gerçek sahibisin.","Seninle her bakışma, aşkımızın sonsuzluğunu fısıldıyor kulağıma.","Sen benim hayatımdaki en huzurlu liman ve en güvenli evimsin.","Seninle geçen her dakika, kalbimdeki en değerli mücevher.","Yarın da, ondan sonraki gün de yine sadece seni seveceğim.","Ve her yeni yılda, her yeni günde yine ve sadece seninle olmak dileğiyle. Seni sonsuza dek seveceğim. İyi ki varsın!"];
+
+const calendar=document.getElementById("calendar");
+const modal=document.getElementById("modal");
+const textBox=document.getElementById("text");
+
+const startDate=new Date("2026-01-01");
+const today=new Date();
+today.setHours(0,0,0,0);
+
+const openedDays=JSON.parse(localStorage.getItem("openedDays")||"[]");
+
+for(let i=1;i<=365;i++){
+  const d=document.createElement("div");
+  d.className="day";
+  d.innerText=i;
+
+  const dayDate=new Date(startDate);
+  dayDate.setDate(startDate.getDate()+i-1);
+
+  if(dayDate>today){
+    d.classList.add("locked");
+  }else{
+    d.onclick=()=>openDay(i);
+  }
+
+  if(openedDays.includes(i)){
+    d.classList.add("opened");
+  }
+
+  calendar.appendChild(d);
+}
+
+function openDay(day){
+  const text=texts[day-1];
+  if(!text) return;
+  if(!openedDays.includes(day)){
+    openedDays.push(day);
+    localStorage.setItem("openedDays",JSON.stringify(openedDays));
+  }
+  document.querySelectorAll(".day")[day-1].classList.add("opened");
+  textBox.innerText=text;
+  modal.classList.add("active");
+}
+
+function closeModal(){
+  modal.classList.remove("active");
+}
+</script>
+
+</body>
+</html>
