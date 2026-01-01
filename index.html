@@ -106,8 +106,13 @@ const modal=document.getElementById("modal");
 const textBox=document.getElementById("text");
 
 const startDate=new Date("2026-01-01");
-const today=new Date();
-today.setHours(0,0,0,0);
+const now = new Date();
+const today = new Date(
+  now.getFullYear(),
+  now.getMonth(),
+  now.getDate()
+);
+
 
 const openedDays=JSON.parse(localStorage.getItem("openedDays")||"[]");
 
@@ -151,3 +156,4 @@ function closeModal(){
 
 </body>
 </html>
+
